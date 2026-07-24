@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --brown-950: #24130c;
+  --brown-900: #3a2115;
+  --brown-800: #58321f;
+  --gold-700: #a46c1e;
+  --gold-500: #c48b33;
+  --gold-400: #dfa945;
+  --gold-300: #ecc36f;
+  --cream-100: #fffaf1;
+  --cream-200: #f9efd9;
+  --cream-300: #eddec3;
+  --cream-400: #dfc9a4;
+  --text: #3e3029;
+  --text-muted: #75655d;
+  --text-light: #9a8980;
+  font-family: 'Noto Kufi Arabic', Tahoma, Arial, sans-serif;
+  color: var(--text);
+  background: #fff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body { min-width: 320px; min-height: 100vh; margin: 0; }
+button, input, select, textarea { font-family: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--gold-400);
+  outline-offset: 3px;
+}
+img { display: block; max-width: 100%; }
+::selection { color: var(--brown-950); background: var(--gold-300); }

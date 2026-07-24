@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 620" role="img" aria-labelledby="title desc">
+  <title id="title">تشكيلة حلويات شرقية</title>
+  <desc id="desc">رسم لطبق فاخر يحتوي على أصناف من الحلويات الشرقية</desc>
+  <defs>
+    <radialGradient id="plate" cx=".45" cy=".35" r=".65"><stop stop-color="#fffdf3"/><stop offset=".7" stop-color="#ead399"/><stop offset=".9" stop-color="#b68135"/><stop offset="1" stop-color="#72451f"/></radialGradient>
+    <linearGradient id="sweetA" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd878"/><stop offset=".5" stop-color="#d28a28"/><stop offset="1" stop-color="#7e4218"/></linearGradient>
+    <linearGradient id="sweetB" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e9b849"/><stop offset="1" stop-color="#8d4e1f"/></linearGradient>
+    <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="28" stdDeviation="24" flood-color="#0d0704" flood-opacity=".45"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <ellipse cx="310" cy="363" rx="268" ry="181" fill="url(#plate)"/><ellipse cx="310" cy="345" rx="221" ry="139" fill="#6d3b1d" opacity=".2"/>
+    <g stroke="#6e3815" stroke-opacity=".5" stroke-width="3">
+      <path d="M130 304l92-60 61 72-101 56z" fill="url(#sweetA)"/><path d="M226 237l94-29 45 90-82 18z" fill="url(#sweetB)"/>
+      <path d="M326 212l104 31-16 93-74-36z" fill="url(#sweetA)"/><path d="M430 249l75 66-55 71-66-48z" fill="url(#sweetB)"/>
+      <path d="M119 380l69-35 72 94-91 23z" fill="url(#sweetB)"/><path d="M230 337l100-31 43 111-109 26z" fill="url(#sweetA)"/>
+      <path d="M350 331l79 5 42 97-112-14z" fill="url(#sweetB)"/>
+    </g>
+    <g fill="#f5dc92" stroke="#a56a22" stroke-width="2"><circle cx="203" cy="299" r="10"/><circle cx="290" cy="263" r="10"/><circle cx="390" cy="267" r="10"/><circle cx="452" cy="314" r="10"/><circle cx="188" cy="399" r="10"/><circle cx="297" cy="369" r="10"/><circle cx="403" cy="375" r="10"/></g>
+    <g fill="none" stroke="#fff2c4" stroke-linecap="round" stroke-width="7" opacity=".52"><path d="M157 312l64-41M255 259l55-17M355 239l58 18M449 280l36 32M144 399l45 43M255 356l77-23M373 349l58 3"/></g>
+  </g>
+  <g fill="#e9be69"><circle cx="83" cy="218" r="5"/><circle cx="533" cy="196" r="4"/><circle cx="561" cy="411" r="5"/></g>
+  <g stroke="#e9be69" stroke-width="3" stroke-linecap="round" opacity=".8"><path d="M81 199v-28M67 185h28M538 173v-22M527 162h22"/></g>
+</svg>
