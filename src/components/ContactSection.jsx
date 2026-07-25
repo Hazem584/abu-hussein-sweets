@@ -30,7 +30,7 @@ function ContactSection({ orderMessage, canCopy, onWhatsAppOrder }) {
             <button
               className="button button--whatsapp"
               type="button"
-              onClick={() => onWhatsAppOrder()}
+              onClick={onWhatsAppOrder}
             >
               تواصل عبر واتساب
             </button>

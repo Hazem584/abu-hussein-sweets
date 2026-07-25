@@ -21,7 +21,7 @@ function Hero({ onWhatsAppOrder }) {
             <button
               className="button button--outline"
               type="button"
-              onClick={() => onWhatsAppOrder()}
+              onClick={onWhatsAppOrder}
             >
               اطلب عبر واتساب <span aria-hidden="true">◉</span>
             </button>

@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react'
 
-function ValidationModal({ isOpen, type, missingFields, onConfirm }) {
+function ValidationModal({
+  isOpen,
+  type,
+  missingFields,
+  errorMessage,
+  onConfirm,
+}) {
   const confirmButtonRef = useRef(null)
 
   useEffect(() => {
@@ -29,6 +35,7 @@ function ValidationModal({ isOpen, type, missingFields, onConfirm }) {
   if (!isOpen) return null
 
   const isEmptyCart = type === 'cart'
+  const isWhatsAppError = type === 'whatsapp'
   const allRequiredFieldsMissing = missingFields.length === 3
 
   return (
@@ -42,11 +49,17 @@ function ValidationModal({ isOpen, type, missingFields, onConfirm }) {
       >
         <span className="validation-modal__icon" aria-hidden="true">!</span>
         <h2 id="validation-modal-title">
-          {isEmptyCart ? 'الطلب فارغ' : 'بيانات الطلب غير مكتملة'}
+          {isEmptyCart
+            ? 'الطلب فارغ'
+            : isWhatsAppError
+              ? 'تعذر فتح واتساب'
+              : 'بيانات الطلب غير مكتملة'}
         </h2>
         <div id="validation-modal-description">
           {isEmptyCart ? (
             <p>يرجى إضافة صنف واحد على الأقل من المنيو قبل إرسال الطلب.</p>
+          ) : isWhatsAppError ? (
+            <p>{errorMessage}</p>
           ) : allRequiredFieldsMissing ? (
             <p>يرجى كتابة الاسم ورقم الهاتف والعنوان لإرسال الطلب عبر واتساب.</p>
           ) : (

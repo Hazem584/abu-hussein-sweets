@@ -6,9 +6,13 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import ProductGrid from './components/ProductGrid'
 import ValidationModal from './components/ValidationModal'
-import { siteConfig } from './config/siteConfig'
 import { products } from './data/products'
 import { createOrderMessage } from './utils/createOrderMessage'
+import {
+  createWhatsAppUrl,
+  getCleanWhatsAppNumber,
+  isValidWhatsAppNumber,
+} from './utils/createWhatsAppUrl.js'
 import './App.css'
 
 function App() {
@@ -22,6 +26,7 @@ function App() {
   const [validationErrors, setValidationErrors] = useState({})
   const [missingFields, setMissingFields] = useState([])
   const [validationModalType, setValidationModalType] = useState(null)
+  const [whatsappErrorMessage, setWhatsappErrorMessage] = useState('')
   const [cartNotice, setCartNotice] = useState('')
 
   const menuSectionRef = useRef(null)
@@ -121,6 +126,8 @@ function App() {
       return
     }
 
+    if (validationModalType === 'whatsapp') return
+
     customerFormRef.current?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
@@ -129,7 +136,9 @@ function App() {
   }, [validationModalType])
 
   const handleWhatsAppOrder = useCallback(
-    () => {
+    (event) => {
+      event?.preventDefault()
+
       if (!cartItems.length) {
         setValidationErrors({})
         setMissingFields([])
@@ -139,14 +148,32 @@ function App() {
 
       if (!validateCustomerDetails()) return
 
-      const messageQuery = orderMessage
-        ? `?text=${encodeURIComponent(orderMessage)}`
-        : ''
-      window.open(
-        `https://wa.me/${siteConfig.whatsappNumber}${messageQuery}`,
-        '_blank',
-        'noopener,noreferrer',
-      )
+      const cleanPhoneNumber = getCleanWhatsAppNumber()
+
+      if (!isValidWhatsAppNumber(cleanPhoneNumber)) {
+        if (import.meta.env.DEV) {
+          console.error('WhatsApp number is missing or invalid.')
+        }
+        setWhatsappErrorMessage(
+          'رقم واتساب غير متاح حاليًا. يرجى المحاولة لاحقًا.',
+        )
+        setValidationModalType('whatsapp')
+        return
+      }
+
+      if (!orderMessage) {
+        if (import.meta.env.DEV) {
+          console.error('WhatsApp order message is empty.')
+        }
+        setWhatsappErrorMessage(
+          'تعذر تجهيز رسالة الطلب. يرجى مراجعة الطلب والمحاولة مرة أخرى.',
+        )
+        setValidationModalType('whatsapp')
+        return
+      }
+
+      const whatsappUrl = createWhatsAppUrl(orderMessage)
+      window.location.assign(whatsappUrl)
     },
     [cartItems.length, orderMessage, validateCustomerDetails],
   )
@@ -291,6 +318,7 @@ function App() {
         isOpen={Boolean(validationModalType)}
         type={validationModalType}
         missingFields={missingFields}
+        errorMessage={whatsappErrorMessage}
         onConfirm={handleValidationConfirm}
       />
     </div>

@@ -1,7 +1,9 @@
 import { siteConfig } from '../config/siteConfig'
+import { createWhatsAppUrl } from '../utils/createWhatsAppUrl.js'
 
 function Footer() {
   const year = new Date().getFullYear()
+  const whatsappUrl = createWhatsAppUrl()
 
   return (
     <footer className="footer">
@@ -17,7 +19,7 @@ function Footer() {
         </p>
         <div className="footer__links">
           <a
-            href={`https://wa.me/${siteConfig.whatsappNumber}`}
+            href={whatsappUrl || '#contact'}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="تواصل عبر واتساب"

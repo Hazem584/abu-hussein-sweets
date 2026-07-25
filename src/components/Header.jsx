@@ -37,7 +37,7 @@ function Header({ cartCount, onWhatsAppOrder }) {
         <button
           className="button button--gold header__action"
           type="button"
-          onClick={() => onWhatsAppOrder()}
+          onClick={onWhatsAppOrder}
         >
           <span aria-hidden="true">◉</span>
           تواصل واتساب
