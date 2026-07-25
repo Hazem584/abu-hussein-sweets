@@ -18,9 +18,9 @@ export const products = [
   ['goulash-fingers', 'صوابع جلاش', 'أصابع جلاش ملفوفة ومحمرة بعناية حتى القرمشة.', 'جلاش وبقلاوة', goulashFingersImage, 'صوابع جلاش محشوة'],
   ['balah-el-sham', 'بلح الشام', 'قطع ذهبية هشة من الخارج وطرية من الداخل.', 'حلويات مقلية', balahElShamImage, 'بلح الشام الشرقي'],
   ['baklava', 'بقلاوة', 'طبقات رقيقة ومقرمشة بحشوة شرقية متوازنة.', 'جلاش وبقلاوة', baklavaImage, 'قطع بقلاوة شرقية'],
-  ['mixed-oriental', 'مشكل حلويات شرقية', 'تشكيلة منتقاة لمشاركة أكثر من طعم في طبق واحد.', 'تشكيلات', mixedOrientalSweetsImage, 'تشكيلة حلويات شرقية متنوعة'],
   ['zeinab-fingers', 'صوابع زينب', 'حلوى شرقية مقرمشة ومشبعة بالشربات الخفيف.', 'حلويات مقلية', zainabFingersImage, 'صوابع زينب'],
-].map(([id, name, description, category, image, imageAlt]) => ({
+  ['mixed-oriental', 'مشكل حلويات شرقية', 'تشكيلة منتقاة لمشاركة أكثر من طعم في طبق واحد.', 'تشكيلات', mixedOrientalSweetsImage, 'تشكيلة حلويات شرقية متنوعة', true],
+].map(([id, name, description, category, image, imageAlt, isBestSeller = false]) => ({
   id,
   name,
   description,
@@ -28,6 +28,7 @@ export const products = [
   pricePerKg: DEFAULT_PRICE_PER_KG,
   image,
   imageAlt,
+  isBestSeller,
 }))
 
 export const weightOptions = [

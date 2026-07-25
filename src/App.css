@@ -150,6 +150,19 @@
   border-radius: 999px; color: var(--brown-900); background: #fffaf0e6;
   backdrop-filter: blur(8px); font-size: .72rem; font-weight: 900;
 }
+.product-card__best-seller {
+  position: absolute;
+  inset: 14px auto auto 14px;
+  padding: 7px 12px;
+  border: 1px solid #f3d98e;
+  border-radius: 999px;
+  color: var(--brown-950);
+  background: var(--gold-300);
+  box-shadow: 0 5px 14px #3a211538;
+  font-size: .72rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
 .image-fallback {
   display: grid; height: 100%; place-content: center; gap: 10px;
   color: var(--brown-800); text-align: center;

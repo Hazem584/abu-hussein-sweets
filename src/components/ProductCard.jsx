@@ -27,6 +27,14 @@ function ProductCard({ product, onAddToCart }) {
           </div>
         )}
         <span className="product-card__category">{product.category}</span>
+        {product.isBestSeller && (
+          <span
+            className="product-card__best-seller"
+            aria-label={`الأكثر طلبًا: ${product.name}`}
+          >
+            الأكثر طلبًا
+          </span>
+        )}
       </div>
       <div className="product-card__body">
         <div className="product-card__top">
