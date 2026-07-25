@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { siteConfig } from '../config/siteConfig'
 
-function Header({ cartCount }) {
+function Header({ cartCount, onWhatsAppOrder }) {
   const [isOpen, setIsOpen] = useState(false)
   const closeMenu = () => setIsOpen(false)
 
@@ -34,15 +34,14 @@ function Header({ cartCount }) {
           <a href="#cart" onClick={closeMenu}>طلبك {cartCount > 0 && `(${cartCount})`}</a>
           <a href="#contact" onClick={closeMenu}>تواصل معنا</a>
         </nav>
-        <a
+        <button
           className="button button--gold header__action"
-          href={`https://wa.me/${siteConfig.whatsappNumber}`}
-          target="_blank"
-          rel="noreferrer"
+          type="button"
+          onClick={() => onWhatsAppOrder()}
         >
           <span aria-hidden="true">◉</span>
           تواصل واتساب
-        </a>
+        </button>
       </div>
     </header>
   )

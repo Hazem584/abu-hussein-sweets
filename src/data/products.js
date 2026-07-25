@@ -3,11 +3,9 @@ import balahElShamImage from '../assets/images/products/balah-el-sham.jpg'
 import basbousaImage from '../assets/images/products/basbousa.jpg'
 import creamKunafaImage from '../assets/images/products/cream-kunafa.jpg'
 import goulashFingersImage from '../assets/images/products/goulash-fingers.jpg'
-import harissaDessertImage from '../assets/images/products/harissa-dessert.jpg'
 import mixedOrientalSweetsImage from '../assets/images/products/mixed-oriental-sweets.jpg'
 import plainGoulashImage from '../assets/images/products/plain-goulash.jpg'
 import plainKunafaImage from '../assets/images/products/plain-kunafa.jpg'
-import ramoushElSetImage from '../assets/images/products/ramoush-el-set.jpg'
 import zainabFingersImage from '../assets/images/products/zainab-fingers.jpg'
 
 export const DEFAULT_PRICE_PER_KG = 150
@@ -22,8 +20,6 @@ export const products = [
   ['baklava', 'بقلاوة', 'طبقات رقيقة ومقرمشة بحشوة شرقية متوازنة.', 'جلاش وبقلاوة', baklavaImage, 'قطع بقلاوة شرقية'],
   ['mixed-oriental', 'مشكل حلويات شرقية', 'تشكيلة منتقاة لمشاركة أكثر من طعم في طبق واحد.', 'تشكيلات', mixedOrientalSweetsImage, 'تشكيلة حلويات شرقية متنوعة'],
   ['zeinab-fingers', 'صوابع زينب', 'حلوى شرقية مقرمشة ومشبعة بالشربات الخفيف.', 'حلويات مقلية', zainabFingersImage, 'صوابع زينب'],
-  ['romosh-el-set', 'رموش الست', 'قطع هشة وناعمة مزينة بلمسة من جوز الهند.', 'تشكيلات', ramoushElSetImage, 'رموش الست'],
-  ['harissa', 'هريسة', 'هريسة شرقية متماسكة بطعم غني ومميز.', 'بسبوسة', harissaDessertImage, 'هريسة حلويات شرقية'],
 ].map(([id, name, description, category, image, imageAlt]) => ({
   id,
   name,

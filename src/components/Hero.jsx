@@ -1,7 +1,7 @@
 import { siteConfig } from '../config/siteConfig'
 import mixedOrientalSweetsImage from '../assets/images/products/mixed-oriental-sweets.jpg'
 
-function Hero() {
+function Hero({ onWhatsAppOrder }) {
   return (
     <section
       className="hero"
@@ -18,7 +18,13 @@ function Hero() {
           </p>
           <div className="hero__actions">
             <a className="button button--gold" href="#menu">شاهد المنيو <span aria-hidden="true">←</span></a>
-            <a className="button button--outline" href="#cart">اطلب عبر واتساب <span aria-hidden="true">◉</span></a>
+            <button
+              className="button button--outline"
+              type="button"
+              onClick={() => onWhatsAppOrder()}
+            >
+              اطلب عبر واتساب <span aria-hidden="true">◉</span>
+            </button>
           </div>
         </div>
         <div className="hero__visual" aria-hidden="true">
