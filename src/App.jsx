@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Cart from './components/Cart'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
@@ -7,6 +7,8 @@ import Hero from './components/Hero'
 import ProductGrid from './components/ProductGrid'
 import ValidationModal from './components/ValidationModal'
 import { products } from './data/products'
+import { useCart } from './hooks/useCart.js'
+import { useOrderValidation } from './hooks/useOrderValidation.js'
 import { createOrderMessage } from './utils/createOrderMessage'
 import {
   createWhatsAppUrl,
@@ -15,16 +17,40 @@ import {
 } from './utils/createWhatsAppUrl.js'
 import './App.css'
 
+const scrollToAndFocus = (scrollTarget, focusTarget, block) => {
+  const prefersReducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)',
+  ).matches
+  const behavior = prefersReducedMotion ? 'auto' : 'smooth'
+
+  scrollTarget?.scrollIntoView({ behavior, block })
+  window.setTimeout(
+    () => focusTarget?.focus(),
+    prefersReducedMotion ? 0 : 350,
+  )
+}
+
 function App() {
-  const [cartItems, setCartItems] = useState([])
-  const [customerDetails, setCustomerDetails] = useState({
-    name: '',
-    phone: '',
-    address: '',
-    notes: '',
-  })
-  const [validationErrors, setValidationErrors] = useState({})
-  const [missingFields, setMissingFields] = useState([])
+  const {
+    cartItems,
+    addToCart,
+    updateQuantity,
+    updateWeight,
+    removeFromCart,
+    clearCart,
+    totalPrice,
+    totalItems,
+    hasValidItems,
+  } = useCart()
+  const {
+    customerDetails,
+    validationErrors,
+    missingFields,
+    updateCustomerDetail,
+    validate: validateCustomerDetails,
+    clearValidation,
+  } = useOrderValidation()
+
   const [validationModalType, setValidationModalType] = useState(null)
   const [whatsappErrorMessage, setWhatsappErrorMessage] = useState('')
   const [cartNotice, setCartNotice] = useState('')
@@ -35,233 +61,122 @@ function App() {
   const nameInputRef = useRef(null)
   const phoneInputRef = useRef(null)
   const addressInputRef = useRef(null)
-  const firstMissingFieldRef = useRef(null)
+  const firstMissingFieldNameRef = useRef(null)
+  const noticeTimeoutRef = useRef(null)
 
-  const totalPrice = useMemo(
-    () =>
-      cartItems.reduce(
-        (total, item) => total + item.pricePerKg * item.weight * item.quantity,
-        0,
-      ),
-    [cartItems],
-  )
-  const totalQuantity = useMemo(
-    () => cartItems.reduce((total, item) => total + item.quantity, 0),
-    [cartItems],
-  )
-  const orderMessage = createOrderMessage(
-    cartItems,
-    totalPrice,
-    customerDetails,
+  const orderMessage = useMemo(
+    () => createOrderMessage(cartItems, totalPrice, customerDetails),
+    [cartItems, customerDetails, totalPrice],
   )
 
-  const validateCustomerDetails = useCallback(() => {
-    const normalizedDetails = Object.fromEntries(
-      Object.entries(customerDetails).map(([key, value]) => [
-        key,
-        value.trim(),
-      ]),
-    )
-    const phoneDigits = normalizedDetails.phone.replace(/[^\d٠-٩]/g, '')
-    const nextErrors = {}
-    const nextMissingFields = []
-
-    const addMissingField = (key, label, message, inputRef) => {
-      nextErrors[key] = message
-      nextMissingFields.push({ key, label })
-      if (!firstMissingFieldRef.current) firstMissingFieldRef.current = inputRef
-    }
-
-    firstMissingFieldRef.current = null
-
-    if (!normalizedDetails.name) {
-      addMissingField('name', 'الاسم', 'يرجى كتابة الاسم.', nameInputRef)
-    }
-    if (!normalizedDetails.phone) {
-      addMissingField(
-        'phone',
-        'رقم الهاتف',
-        'يرجى كتابة رقم الهاتف.',
-        phoneInputRef,
-      )
-    } else if (phoneDigits.length < 8) {
-      addMissingField(
-        'phone',
-        'رقم الهاتف',
-        'يرجى كتابة رقم هاتف صحيح.',
-        phoneInputRef,
-      )
-    }
-    if (!normalizedDetails.address) {
-      addMissingField(
-        'address',
-        'العنوان',
-        'يرجى كتابة العنوان.',
-        addressInputRef,
-      )
-    }
-
-    setCustomerDetails(normalizedDetails)
-    setValidationErrors(nextErrors)
-    setMissingFields(nextMissingFields)
-
-    if (nextMissingFields.length) {
-      setValidationModalType('customer')
-      return false
-    }
-
-    setValidationModalType(null)
-    return true
-  }, [customerDetails])
+  useEffect(
+    () => () => window.clearTimeout(noticeTimeoutRef.current),
+    [],
+  )
 
   const handleValidationConfirm = useCallback(() => {
     setValidationModalType(null)
 
     if (validationModalType === 'cart') {
-      menuSectionRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-      window.setTimeout(() => menuHeadingRef.current?.focus(), 350)
+      scrollToAndFocus(
+        menuSectionRef.current,
+        menuHeadingRef.current,
+        'start',
+      )
       return
     }
 
     if (validationModalType === 'whatsapp') return
 
-    customerFormRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-    })
-    window.setTimeout(() => firstMissingFieldRef.current?.current?.focus(), 350)
+    const inputRefs = {
+      name: nameInputRef,
+      phone: phoneInputRef,
+      address: addressInputRef,
+    }
+
+    scrollToAndFocus(
+      customerFormRef.current,
+      inputRefs[firstMissingFieldNameRef.current]?.current,
+      'center',
+    )
   }, [validationModalType])
+
+  const showWhatsAppError = useCallback((message) => {
+    setWhatsappErrorMessage(message)
+    setValidationModalType('whatsapp')
+  }, [])
 
   const handleWhatsAppOrder = useCallback(
     (event) => {
       event?.preventDefault()
 
-      if (!cartItems.length) {
-        setValidationErrors({})
-        setMissingFields([])
+      if (!hasValidItems) {
+        clearValidation()
         setValidationModalType('cart')
         return
       }
 
-      if (!validateCustomerDetails()) return
+      const validationResult = validateCustomerDetails()
+      if (!validationResult.isValid) {
+        firstMissingFieldNameRef.current =
+          validationResult.firstMissingField
+        setValidationModalType('customer')
+        return
+      }
 
       const cleanPhoneNumber = getCleanWhatsAppNumber()
-
       if (!isValidWhatsAppNumber(cleanPhoneNumber)) {
-        if (import.meta.env.DEV) {
-          console.error('WhatsApp number is missing or invalid.')
-        }
-        setWhatsappErrorMessage(
+        showWhatsAppError(
           'رقم واتساب غير متاح حاليًا. يرجى المحاولة لاحقًا.',
         )
-        setValidationModalType('whatsapp')
         return
       }
 
       if (!orderMessage) {
-        if (import.meta.env.DEV) {
-          console.error('WhatsApp order message is empty.')
-        }
-        setWhatsappErrorMessage(
+        showWhatsAppError(
           'تعذر تجهيز رسالة الطلب. يرجى مراجعة الطلب والمحاولة مرة أخرى.',
         )
-        setValidationModalType('whatsapp')
         return
       }
 
-      const whatsappUrl = createWhatsAppUrl(orderMessage)
-      window.location.assign(whatsappUrl)
+      try {
+        const whatsappUrl = createWhatsAppUrl(
+          cleanPhoneNumber,
+          orderMessage,
+        )
+        window.location.assign(whatsappUrl)
+      } catch {
+        showWhatsAppError(
+          'تعذر فتح واتساب حاليًا. يرجى المحاولة مرة أخرى.',
+        )
+      }
     },
-    [cartItems.length, orderMessage, validateCustomerDetails],
+    [
+      clearValidation,
+      hasValidItems,
+      orderMessage,
+      showWhatsAppError,
+      validateCustomerDetails,
+    ],
   )
 
-  const clearValidationError = (fieldName) => {
-    setValidationErrors((current) => ({ ...current, [fieldName]: '' }))
-  }
-
-  const addToCart = (product, weight) => {
-    setCartItems((currentItems) => {
-      const existingItem = currentItems.find(
-        (item) => item.productId === product.id && item.weight === weight,
+  const handleAddToCart = useCallback(
+    (product, weight) => {
+      addToCart(product, weight)
+      setCartNotice(`تمت إضافة ${product.name} إلى طلبك`)
+      window.clearTimeout(noticeTimeoutRef.current)
+      noticeTimeoutRef.current = window.setTimeout(
+        () => setCartNotice(''),
+        2400,
       )
-      if (existingItem) {
-        return currentItems.map((item) =>
-          item.productId === product.id && item.weight === weight
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        )
-      }
-      return [
-        ...currentItems,
-        {
-          productId: product.id,
-          name: product.name,
-          pricePerKg: product.pricePerKg,
-          weight,
-          quantity: 1,
-        },
-      ]
-    })
-    setCartNotice(`تمت إضافة ${product.name} إلى طلبك`)
-    window.setTimeout(() => setCartNotice(''), 2400)
-  }
-
-  const updateQuantity = (productId, weight, change) => {
-    setCartItems((currentItems) =>
-      currentItems
-        .map((item) =>
-          item.productId === productId && item.weight === weight
-            ? { ...item, quantity: item.quantity + change }
-            : item,
-        )
-        .filter((item) => item.quantity > 0),
-    )
-  }
-
-  const updateWeight = (productId, oldWeight, newWeight) => {
-    if (oldWeight === newWeight) return
-    setCartItems((currentItems) => {
-      const editedItem = currentItems.find(
-        (item) => item.productId === productId && item.weight === oldWeight,
-      )
-      const matchingItem = currentItems.find(
-        (item) => item.productId === productId && item.weight === newWeight,
-      )
-      if (matchingItem) {
-        return currentItems
-          .filter(
-            (item) =>
-              !(item.productId === productId && item.weight === oldWeight),
-          )
-          .map((item) =>
-            item.productId === productId && item.weight === newWeight
-              ? { ...item, quantity: item.quantity + editedItem.quantity }
-              : item,
-          )
-      }
-      return currentItems.map((item) =>
-        item.productId === productId && item.weight === oldWeight
-          ? { ...item, weight: newWeight }
-          : item,
-      )
-    })
-  }
-
-  const removeItem = (productId, weight) => {
-    setCartItems((currentItems) =>
-      currentItems.filter(
-        (item) => !(item.productId === productId && item.weight === weight),
-      ),
-    )
-  }
+    },
+    [addToCart],
+  )
 
   return (
     <div className="site-shell">
       <Header
-        cartCount={totalQuantity}
+        cartCount={totalItems}
         onWhatsAppOrder={handleWhatsAppOrder}
       />
       <main>
@@ -270,34 +185,34 @@ function App() {
           products={products}
           menuSectionRef={menuSectionRef}
           menuHeadingRef={menuHeadingRef}
-          onAddToCart={addToCart}
+          onAddToCart={handleAddToCart}
         />
         <Cart
           items={cartItems}
           totalPrice={totalPrice}
+          totalQuantity={totalItems}
           customerDetails={customerDetails}
           validationErrors={validationErrors}
           customerFormRef={customerFormRef}
           nameInputRef={nameInputRef}
           phoneInputRef={phoneInputRef}
           addressInputRef={addressInputRef}
-          onCustomerDetailsChange={setCustomerDetails}
-          onClearValidationError={clearValidationError}
+          onCustomerDetailChange={updateCustomerDetail}
           onWhatsAppOrder={handleWhatsAppOrder}
           onQuantityChange={updateQuantity}
           onWeightChange={updateWeight}
-          onRemove={removeItem}
-          onClear={() => setCartItems([])}
+          onRemove={removeFromCart}
+          onClear={clearCart}
         />
         <ContactSection
           orderMessage={orderMessage}
-          canCopy={cartItems.length > 0}
+          canCopy={hasValidItems}
           onWhatsAppOrder={handleWhatsAppOrder}
         />
       </main>
       <Footer />
 
-      {totalQuantity > 0 && (
+      {totalItems > 0 && (
         <a
           className="mobile-cart-pill"
           href="#cart"
@@ -305,7 +220,7 @@ function App() {
         >
           <span aria-hidden="true">🧺</span>
           <span>طلبك</span>
-          <strong>{totalQuantity}</strong>
+          <strong>{totalItems}</strong>
           <span className="mobile-cart-pill__total">{totalPrice} ج.م</span>
         </a>
       )}

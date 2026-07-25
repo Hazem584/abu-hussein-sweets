@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { weightOptions } from '../data/products'
+import { WEIGHT_OPTIONS } from '../constants/weights.js'
 import { formatCurrency } from '../utils/formatCurrency'
 
 function ProductCard({ product, onAddToCart }) {
@@ -15,6 +15,7 @@ function ProductCard({ product, onAddToCart }) {
             src={product.image}
             alt={product.imageAlt}
             loading="lazy"
+            decoding="async"
             onError={() => setImageFailed(true)}
           />
         ) : (
@@ -49,7 +50,7 @@ function ProductCard({ product, onAddToCart }) {
           value={weight}
           onChange={(event) => setWeight(Number(event.target.value))}
         >
-          {weightOptions.map((option) => (
+          {WEIGHT_OPTIONS.map((option) => (
             <option value={option.value} key={option.value}>{option.label}</option>
           ))}
         </select>

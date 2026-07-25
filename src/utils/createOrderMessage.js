@@ -1,8 +1,4 @@
-import { weightOptions } from '../data/products.js'
-
-const getWeightLabel = (weight) =>
-  weightOptions.find((option) => option.value === weight)?.label ||
-  `${weight} كيلو`
+import { formatWeight } from './formatWeight.js'
 
 const formatOrderPrice = (amount) =>
   `${new Intl.NumberFormat('en-US', {
@@ -13,7 +9,7 @@ const normalizeDetails = (customerDetails) =>
   Object.fromEntries(
     Object.entries(customerDetails).map(([key, value]) => [
       key,
-      value.trim(),
+      String(value).trim(),
     ]),
   )
 
@@ -25,7 +21,7 @@ export const createOrderMessage = (items, totalPrice, customerDetails) => {
       const quantityPrefix = item.quantity > 1 ? `${item.quantity} × ` : ''
       const itemTotal = item.pricePerKg * item.weight * item.quantity
 
-      return `- ${quantityPrefix}${getWeightLabel(item.weight)} ${item.name} — ${formatOrderPrice(itemTotal)}`
+      return `- ${quantityPrefix}${formatWeight(item.weight)} ${item.name} — ${formatOrderPrice(itemTotal)}`
     })
     .join('\n')
 

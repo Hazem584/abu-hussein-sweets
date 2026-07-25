@@ -28,7 +28,14 @@ function Hero({ onWhatsAppOrder }) {
           </div>
         </div>
         <div className="hero__visual" aria-hidden="true">
-          <img className="hero__image" src="/images/hero-sweets.svg" alt="" />
+          <img
+            className="hero__image"
+            src="/images/hero-sweets.svg"
+            alt=""
+            width="620"
+            height="620"
+            fetchPriority="high"
+          />
           <div className="hero__seal"><strong>١٥٠</strong><small>جنيه / كيلو</small></div>
         </div>
       </div>

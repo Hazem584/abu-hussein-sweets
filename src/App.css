@@ -1,3 +1,4 @@
+/* Layout and shared controls */
 .site-shell { min-height: 100vh; overflow: hidden; }
 .container { width: min(1180px, calc(100% - 32px)); margin-inline: auto; }
 .section { padding: 92px 0; }
@@ -32,6 +33,7 @@
 .button--facebook { color: #fff; background: #2467b2; }
 .button--full { width: 100%; }
 
+/* Header */
 .header { position: absolute; z-index: 20; inset: 0 0 auto; color: #fff; }
 .header__inner { display: flex; align-items: center; min-height: 88px; gap: 32px; }
 .brand {
@@ -62,6 +64,7 @@
   background: #ffffff14; font-size: 1.35rem;
 }
 
+/* Hero */
 .hero {
   position: relative; display: grid; min-height: 780px; align-items: center;
   padding: 125px 0 74px; color: #fff;
@@ -124,6 +127,7 @@
   border-radius: 50%; color: var(--gold-300); background: #ffffff14;
 }
 
+/* Menu and product cards */
 .category-filters {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin: -14px 0 35px;
 }
@@ -192,6 +196,7 @@
 }
 .product-card__total strong { color: var(--brown-900); font-size: 1rem; }
 
+/* Cart and customer form */
 .cart-layout {
   display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(330px, .55fr);
   gap: 24px; align-items: start;
@@ -275,6 +280,7 @@
   margin: 14px 0 0; color: var(--text-light); font-size: .7rem; line-height: 1.65; text-align: center;
 }
 
+/* Contact and footer */
 .contact-section {
   position: relative; color: #fff;
   background: radial-gradient(circle at 88% 20%, #dfaa4529, transparent 23%), var(--brown-950);
@@ -297,7 +303,7 @@
 .footer .brand { color: #fff; font-size: .97rem; }
 .footer__copyright { font-size: .77rem; }
 .footer__links { display: flex; gap: 9px; }
-.footer__links a, .footer__links button {
+.footer__links a {
   display: grid; width: 38px; height: 38px; place-items: center;
   padding: 0; border: 1px solid #ffffff24; border-radius: 50%; color: #fff;
   background: transparent; font: inherit; text-decoration: none; cursor: pointer;
@@ -307,6 +313,7 @@
   height: 20px;
   fill: currentColor;
 }
+/* Fixed feedback and validation */
 .mobile-cart-pill { display: none; }
 .toast {
   position: fixed; z-index: 50; inset: auto 50% 24px auto;
@@ -387,6 +394,7 @@
   }
 }
 
+/* Responsive layout */
 @media (max-width: 1000px) {
   .header__action { display: none; }
   .hero__inner { gap: 30px; }

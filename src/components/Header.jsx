@@ -10,7 +10,12 @@ function Header({ cartCount, onWhatsAppOrder }) {
       <div className="container header__inner">
         <a className="brand" href="#home" onClick={closeMenu}>
           <span className="brand__mark" aria-hidden="true">
-            <img src={siteConfig.brandIconPath} alt="" />
+            <img
+              src={siteConfig.brandIconPath}
+              alt=""
+              width="64"
+              height="64"
+            />
           </span>
           <span>{siteConfig.businessName}</span>
         </a>

@@ -29,7 +29,11 @@ function ProductGrid({
           <h2 ref={menuHeadingRef} tabIndex="-1">اختار الحلو اللي بتحبه</h2>
           <p>كل الأصناف بسعر موحّد للكيلو. اختار الصنف والوزن المناسب، وإحنا هنجهّز لك تفاصيل الطلب.</p>
         </div>
-        <div className="category-filters" aria-label="تصفية المنيو">
+        <div
+          className="category-filters"
+          role="group"
+          aria-label="تصفية المنيو"
+        >
           {categories.map((category) => (
             <button
               className={`category-filter${activeCategory === category ? ' is-active' : ''}`}

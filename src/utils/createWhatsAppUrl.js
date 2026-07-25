@@ -1,19 +1,24 @@
 import { siteConfig } from '../config/siteConfig.js'
 
-export const getCleanWhatsAppNumber = () => {
-  const configuredNumber =
-    import.meta.env.VITE_WHATSAPP_NUMBER || siteConfig.whatsappNumber
+export const getConfiguredWhatsAppNumber = () =>
+  import.meta.env.VITE_WHATSAPP_NUMBER || siteConfig.whatsappNumber
 
-  return String(configuredNumber || '').replace(/\D/g, '')
+export const sanitizeWhatsAppNumber = (phoneNumber) =>
+  String(phoneNumber || '').replace(/\D/g, '')
+
+export const getCleanWhatsAppNumber = () => {
+  return sanitizeWhatsAppNumber(getConfiguredWhatsAppNumber())
 }
 
 export const isValidWhatsAppNumber = (phoneNumber) =>
-  /^[1-9]\d{9,14}$/.test(phoneNumber)
+  /^[1-9]\d{9,14}$/.test(sanitizeWhatsAppNumber(phoneNumber))
 
-export const createWhatsAppUrl = (orderMessage = '') => {
-  const cleanPhoneNumber = getCleanWhatsAppNumber()
+export const createWhatsAppUrl = (phoneNumber, orderMessage = '') => {
+  const cleanPhoneNumber = sanitizeWhatsAppNumber(phoneNumber)
 
-  if (!isValidWhatsAppNumber(cleanPhoneNumber)) return ''
+  if (!isValidWhatsAppNumber(cleanPhoneNumber)) {
+    throw new TypeError('A valid international WhatsApp number is required.')
+  }
 
   const messageQuery = orderMessage
     ? `?text=${encodeURIComponent(orderMessage)}`

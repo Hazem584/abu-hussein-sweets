@@ -1,16 +1,28 @@
 import { siteConfig } from '../config/siteConfig'
-import { createWhatsAppUrl } from '../utils/createWhatsAppUrl.js'
+import {
+  createWhatsAppUrl,
+  getCleanWhatsAppNumber,
+  isValidWhatsAppNumber,
+} from '../utils/createWhatsAppUrl.js'
 
 function Footer() {
   const year = new Date().getFullYear()
-  const whatsappUrl = createWhatsAppUrl()
+  const whatsappNumber = getCleanWhatsAppNumber()
+  const whatsappUrl = isValidWhatsAppNumber(whatsappNumber)
+    ? createWhatsAppUrl(whatsappNumber)
+    : '#contact'
 
   return (
     <footer className="footer">
       <div className="container footer__inner">
         <a className="brand" href="#home">
           <span className="brand__mark" aria-hidden="true">
-            <img src={siteConfig.brandIconPath} alt="" />
+            <img
+              src={siteConfig.brandIconPath}
+              alt=""
+              width="64"
+              height="64"
+            />
           </span>
           <span>{siteConfig.businessName}</span>
         </a>
@@ -19,7 +31,7 @@ function Footer() {
         </p>
         <div className="footer__links">
           <a
-            href={whatsappUrl || '#contact'}
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="تواصل عبر واتساب"

@@ -35,7 +35,14 @@ function ContactSection({ orderMessage, canCopy, onWhatsAppOrder }) {
               تواصل عبر واتساب
             </button>
             <button className="button button--gold" type="button" onClick={copyOrder}>نسخ تفاصيل الطلب</button>
-            <a className="button button--facebook" href={siteConfig.facebookUrl} target="_blank" rel="noreferrer">افتح صفحة فيسبوك</a>
+            <a
+              className="button button--facebook"
+              href={siteConfig.facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              افتح صفحة فيسبوك
+            </a>
             <p className="copy-feedback" aria-live="polite">{copyStatus}</p>
           </div>
         </div>

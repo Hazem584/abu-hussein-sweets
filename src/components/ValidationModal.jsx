@@ -8,11 +8,13 @@ function ValidationModal({
   onConfirm,
 }) {
   const confirmButtonRef = useRef(null)
+  const previousFocusRef = useRef(null)
 
   useEffect(() => {
     if (!isOpen) return undefined
 
     const previousOverflow = document.body.style.overflow
+    previousFocusRef.current = document.activeElement
     document.body.style.overflow = 'hidden'
     confirmButtonRef.current?.focus()
 
@@ -29,6 +31,7 @@ function ValidationModal({
     return () => {
       document.body.style.overflow = previousOverflow
       document.removeEventListener('keydown', handleKeyDown)
+      previousFocusRef.current?.focus()
     }
   }, [isOpen, onConfirm])
 
